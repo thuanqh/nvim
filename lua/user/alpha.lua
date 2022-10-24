@@ -4,6 +4,15 @@ if not status_ok then
 end
 
 local dashboard = require "alpha.themes.dashboard"
+
+local function button(sc, txt, keybind, keybind_opts)
+  local b = dashboard.button(sc, txt, keybind, keybind_opts)
+  b.opts.hl_shortcut = "Macro"
+  return b
+end
+
+local icons = require "user.icons"
+
 dashboard.section.header.val = {
   [[                               __                ]],
   [[  ___     ___    ___   __  __ /\_\    ___ ___    ]],
@@ -13,23 +22,32 @@ dashboard.section.header.val = {
   [[ \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
 }
 dashboard.section.buttons.val = {
-  dashboard.button("f", " " .. " Find file", ":Telescope find_files <CR>"),
-  dashboard.button("e", " " .. " New file", ":ene <BAR> startinsert <CR>"),
-  dashboard.button("p", " " .. " Find project", ":lua require('telescope').extensions.projects.projects()<CR>"),
-  dashboard.button("r", " " .. " Recent files", ":Telescope oldfiles <CR>"),
-  dashboard.button("t", " " .. " Find text", ":Telescope live_grep <CR>"),
-  dashboard.button("c", " " .. " Config", ":e $MYVIMRC <CR>"),
-  dashboard.button("q", " " .. " Quit", ":qa<CR>"),
+  button("f", icons.documents.Files .. " Find file", ":Telescope find_files <CR>"),
+  button("e", icons.ui.NewFile .. " New file", ":ene <BAR> startinsert <CR>"),
+  button("p", icons.git.Repo .. " Find project", ":lua require('telescope').extensions.projects.projects()<CR>"),
+  button("r", icons.ui.History .. " Recent files", ":Telescope oldfiles <CR>"),
+  button("t", icons.ui.List .. " Find text", ":Telescope live_grep <CR>"),
+  -- dashboard.button("s", icons.ui.SignIn .. " Find Session", ":silent Autosession search <CR>"),
+  button("s", icons.ui.SignIn .. " Find Session", ":SearchSession<CR>"),
+  button("c", icons.ui.Gear .. " Config", ":e ~/.config/nvim/init.lua <CR>"),
+  button("u", icons.ui.CloudDownload .. " Update", ":PackerSync<CR>"),
+  button("q", icons.ui.SignOut .. " Quit", ":qa<CR>"),
 }
 local function footer()
-  return "chrisatmachine.com"
+  -- NOTE: requires the fortune-mod package to work
+  -- local handle = io.popen("fortune")
+  -- local fortune = handle:read("*a")
+  -- handle:close()
+  -- return fortune
+  return "lungvang.com"
 end
 
 dashboard.section.footer.val = footer()
 
-dashboard.section.footer.opts.hl = "Type"
 dashboard.section.header.opts.hl = "Include"
-dashboard.section.buttons.opts.hl = "Keyword"
+dashboard.section.buttons.opts.hl = "Macro"
+dashboard.section.footer.opts.hl = "Type"
 
 dashboard.opts.opts.noautocmd = true
+-- vim.cmd([[autocmd User AlphaReady echo 'ready']])
 alpha.setup(dashboard.opts)
